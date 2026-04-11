@@ -1,1 +1,37 @@
+apiVersion: 1
 
+groups:
+  - orgId: 1
+    name: OpenClaw-Grafana-Rules
+    folder: OpenClaw Monitoring
+    interval: 1m
+    rules:
+
+      - uid: alert-openclaw-ws-drop
+        title: "OpenClaw WS sudden drop"
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            expr: rate(openclaw_ws_connections_total[1m])
+          - refId: B
+            datasourceUid: prometheus
+            expr: rate(openclaw_ws_connections_total[10m])
+        for: 1m
+        annotations:
+          summary: "WebSocket connection drop detected"
+        labels:
+          severity: critical
+
+      - uid: alert-nginx-502-spike
+        title: "Nginx 502 Spike"
+        condition: A
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            expr: rate(nginx_http_responses_total{status="502"}[1m]) > 1
+        for: 1m
+        annotations:
+          summary: "High number of 502"
+        labels:
+          severity: warning
