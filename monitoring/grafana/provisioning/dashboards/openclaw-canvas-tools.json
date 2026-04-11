@@ -1,0 +1,157 @@
+{
+  "id": null,
+  "uid": "openclaw-canvas-tools",
+  "title": "OpenClaw Canvas & Tools Performance",
+  "tags": ["openclaw", "canvas", "tools", "performance", "llm"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+
+  "panels": [
+
+    {
+      "type": "stat",
+      "title": "Canvas Loads (10m)",
+      "gridPos": {"x":0,"y":0,"w":4,"h":3},
+      "targets":[
+        {
+          "expr": "increase(openclaw_canvas_load_total[10m])",
+          "legendFormat": "Loads"
+        }
+      ]
+    },
+
+    {
+      "type": "stat",
+      "title": "Canvas Load Failures (10m)",
+      "gridPos": {"x":4,"y":0,"w":4,"h":3},
+      "targets":[
+        {
+          "expr": "increase(openclaw_canvas_load_failed_total[10m])",
+          "legendFormat": "Failed"
+        }
+      ]
+    },
+
+    {
+      "type": "stat",
+      "title": "Tool Executions (10m)",
+      "gridPos": {"x":8,"y":0,"w":4,"h":3},
+      "targets":[
+        {
+          "expr": "increase(openclaw_tools_exec_total[10m])",
+          "legendFormat": "Exec"
+        }
+      ]
+    },
+
+    {
+      "type": "stat",
+      "title": "Tool Failures (10m)",
+      "gridPos": {"x":12,"y":0,"w":4,"h":3},
+      "targets":[
+        {
+          "expr": "increase(openclaw_tools_exec_failed_total[10m])",
+          "legendFormat": "Fail"
+        }
+      ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "Canvas Load Time (p50/p90/p99)",
+      "gridPos": {"x":0,"y":3,"w":12,"h":8},
+      "targets":[
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(openclaw_canvas_load_time_bucket[5m])) by (le))",
+          "legendFormat": "p50"
+        },
+        {
+          "expr": "histogram_quantile(0.90, sum(rate(openclaw_canvas_load_time_bucket[5m])) by (le))",
+          "legendFormat": "p90"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(openclaw_canvas_load_time_bucket[5m])) by (le))",
+          "legendFormat": "p99"
+        }
+      ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "Tool Execution Latency (p50/p90/p99)",
+      "gridPos": {"x":12,"y":3,"w":12,"h":8},
+      "targets":[
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(openclaw_tools_exec_time_bucket[5m])) by (le, tool))",
+          "legendFormat": "{{tool}} p50"
+        },
+        {
+          "expr": "histogram_quantile(0.90, sum(rate(openclaw_tools_exec_time_bucket[5m])) by (le, tool))",
+          "legendFormat": "{{tool}} p90"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(openclaw_tools_exec_time_bucket[5m])) by (le, tool))",
+          "legendFormat": "{{tool}} p99"
+        }
+      ]
+    },
+
+    {
+      "type": "table",
+      "title": "Tool Usage (10m)",
+      "gridPos": {"x":0,"y":11,"w":12,"h":8},
+      "targets":[
+        {
+          "expr": "increase(openclaw_tools_exec_total[10m])",
+          "legendFormat": "{{tool}}"
+        }
+      ]
+    },
+
+    {
+      "type": "heatmap",
+      "title": "Tool Error Heatmap",
+      "gridPos": {"x":12,"y":11,"w":12,"h":8},
+      "targets":[
+        {
+          "expr": "rate(openclaw_tools_exec_failed_total[5m])",
+          "legendFormat": "{{tool}}"
+        }
+      ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "Model Invocation Count (LLM)",
+      "gridPos": {"x":0,"y":19,"w":12,"h":8},
+      "targets":[
+        {
+          "expr": "increase(openclaw_model_invocation_total[5m])",
+          "legendFormat": "Models"
+        }
+      ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "Prompt / Response Size",
+      "gridPos": {"x":12,"y":19,"w":12,"h":8},
+      "targets":[
+        {
+          "expr": "increase(openclaw_prompt_tokens_total[5m])",
+          "legendFormat": "Prompt Tokens"
+        },
+        {
+          "expr": "increase(openclaw_response_tokens_total[5m])",
+          "legendFormat": "Response Tokens"
+        }
+      ]
+    }
+
+  ],
+
+  "time": { "from": "now-6h", "to": "now" },
+  "templating": { "list": [] }
+}
