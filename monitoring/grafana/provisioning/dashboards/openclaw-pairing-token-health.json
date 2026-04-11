@@ -1,0 +1,162 @@
+{
+  "id": null,
+  "uid": "openclaw-pairing-token-health",
+  "title": "OpenClaw Pairing & Token Health",
+  "tags": ["openclaw", "pairing", "auth", "token", "security"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "style": "dark",
+
+  "panels": [
+
+    {
+      "type": "stat",
+      "title": "Pairing Attempts (10m)",
+      "gridPos": { "x": 0, "y": 0, "w": 3, "h": 3 },
+      "targets": [
+        {
+          "expr": "increase(openclaw_pairing_attempt_total[10m])",
+          "legendFormat": "Attempts"
+        }
+      ]
+    },
+
+    {
+      "type": "stat",
+      "title": "Pairing Failures (10m)",
+      "gridPos": { "x": 3, "y": 0, "w": 3, "h": 3 },
+      "targets": [
+        {
+          "expr": "increase(openclaw_pairing_failed_total[10m])",
+          "legendFormat": "Failed"
+        }
+      ]
+    },
+
+    {
+      "type": "stat",
+      "title": "Token Missing (10m)",
+      "gridPos": { "x": 6, "y": 0, "w": 3, "h": 3 },
+      "targets": [
+        {
+          "expr": "increase(openclaw_auth_token_missing_total[10m])",
+          "legendFormat": "Missing"
+        }
+      ]
+    },
+
+    {
+      "type": "stat",
+      "title": "Token Invalid (10m)",
+      "gridPos": { "x": 9, "y": 0, "w": 3, "h": 3 },
+      "targets": [
+        {
+          "expr": "increase(openclaw_auth_token_invalid_total[10m])",
+          "legendFormat": "Invalid"
+        }
+      ]
+    },
+
+    {
+      "type": "stat",
+      "title": "Token Rejected (10m)",
+      "gridPos": { "x": 12, "y": 0, "w": 3, "h": 3 },
+      "targets": [
+        {
+          "expr": "increase(openclaw_auth_token_rejected_total[10m])",
+          "legendFormat": "Rejected"
+        }
+      ]
+    },
+
+    {
+      "type": "stat",
+      "title": "Trusted Proxy Violations (10m)",
+      "gridPos": { "x": 15, "y": 0, "w": 3, "h": 3 },
+      "targets": [
+        {
+          "expr": "increase(openclaw_proxy_untrusted_total[10m])",
+          "legendFormat": "Untrusted"
+        }
+      ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "Pairing Attempts vs Failures",
+      "gridPos": { "x": 0, "y": 3, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "increase(openclaw_pairing_attempt_total[5m])",
+          "legendFormat": "Attempt"
+        },
+        {
+          "expr": "increase(openclaw_pairing_failed_total[5m])",
+          "legendFormat": "Failed"
+        }
+      ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "Token Error Rates",
+      "gridPos": { "x": 12, "y": 3, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(openclaw_auth_token_missing_total[5m])",
+          "legendFormat": "Missing"
+        },
+        {
+          "expr": "rate(openclaw_auth_token_invalid_total[5m])",
+          "legendFormat": "Invalid"
+        },
+        {
+          "expr": "rate(openclaw_auth_token_rejected_total[5m])",
+          "legendFormat": "Rejected"
+        }
+      ]
+    },
+
+    {
+      "type": "heatmap",
+      "title": "Pairing Failure Heatmap",
+      "gridPos": { "x": 0, "y": 11, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(openclaw_pairing_failure_reason_total[5m])",
+          "legendFormat": "{{reason}}"
+        }
+      ]
+    },
+
+    {
+      "type": "table",
+      "title": "Token Failure Reasons",
+      "gridPos": { "x": 12, "y": 11, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "increase(openclaw_auth_token_failure_reason_total[10m])",
+          "legendFormat": "{{reason}}"
+        }
+      ]
+    },
+
+    {
+      "type": "timeseries",
+      "title": "Untrusted Proxy Events",
+      "gridPos": { "x": 0, "y": 19, "w": 24, "h": 8 },
+      "targets": [
+        {
+          "expr": "increase(openclaw_proxy_untrusted_total[5m])",
+          "legendFormat": "Untrusted Proxy"
+        }
+      ]
+    }
+
+  ],
+
+  "time": { "from": "now-12h", "to": "now" },
+  "templating": { "list": [] }
+}
