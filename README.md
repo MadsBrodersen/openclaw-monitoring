@@ -47,12 +47,12 @@ Dashboard mappen OpenClaw Monitoring oprettes automatisk.
 
 Prometheus og Grafana indeholder:
 
-OpenClaw backend health
-WebSocket health
-Token/pairing errors
-Nginx upstream latency + 5xx alerts
-Host CPU/disk alerts
-Log-baserede alerts (Loki)
+* OpenClaw backend health
+* WebSocket health
+* Token/pairing errors
+* Nginx upstream latency + 5xx alerts
+* Host CPU/disk alerts
+* Log-baserede alerts (Loki)
 
 ## Support
 Kontakt: mads@brodersen.cloud
