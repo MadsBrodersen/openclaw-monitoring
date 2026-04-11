@@ -38,9 +38,10 @@ docker compose -f docker-compose.monitoring.yml up -d
 ```
 
 ### 4. Login til Grafana
-http://<server-ip>:3000<br>
+http://server-ip:3000<br>
 <strong>User:</strong> admin<br>
-<strong>Password:</strong> admin</server-ip>
+<strong>Password:</strong> admin
+
 Dashboard mappen OpenClaw Monitoring oprettes automatisk.
 
 ## Alerts
