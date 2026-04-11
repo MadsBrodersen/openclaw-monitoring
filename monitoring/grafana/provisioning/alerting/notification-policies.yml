@@ -2,16 +2,4 @@ apiVersion: 1
 
 policies:
   - orgId: 1
-    receiver: "telegram"
-    group_by:
-      - alertname
-    routes:
-      - receiver: "email"
-        match:
-          severity: critical
-      - receiver: "teams"
-        match:
-          severity: warning
-      - receiver: "slack"
-        match:
-          severity: info
+    receiver: "email"
