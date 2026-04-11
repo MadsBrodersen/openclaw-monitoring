@@ -1,0 +1,27 @@
+groups:
+  - name: loki-log-alerts
+    rules:
+      - alert: OpenClawGatewayErrors
+        expr: sum by (job)(
+          rate(
+            {job="openclaw"} |= "ERROR" [5m]
+          )
+        ) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "OpenClaw logs contain errors"
+          description: "Error lines were detected in OpenClaw logs"
+
+      - alert: NginxBlockedIPs
+        expr: sum by (job)(
+          rate(
+            {job="nginx"} |= "access forbidden" [2m]
+          )
+        ) > 5
+        labels:
+          severity: info
+        annotations:
+          summary: "Nginx is blocking unusually many IPs"
+          description: "More than 5 forbidden requests in 2 minutes"

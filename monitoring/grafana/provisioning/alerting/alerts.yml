@@ -1,0 +1,46 @@
+groups:
+  - name: openclaw-alerts
+    rules:
+      - alert: OpenClawDown
+        expr: up{job="openclaw"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "?? OpenClaw backend is DOWN"
+          description: "Prometheus cannot scrape openclaw for 30s."
+
+      - alert: GatewayWSRateError
+        expr: rate(openclaw_errors_total[5m]) > 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "OpenClaw WS error rate high"
+          description: "WS errors above 1/sec"
+
+      - alert: NginxHigh5xx
+        expr: rate(nginx_http_responses_total{status=~"5.."}[5m]) > 5
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Nginx upstream 5xx high"
+          description: "5xx responses above threshold"
+
+      - alert: DiskSpaceCritical
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) < 0.05
+        labels:
+          severity: critical
+        annotations:
+          summary: "Host disk critically low"
+          desc: "Less than 5% disk left"
+
+      - alert: CpuHigh
+        expr: 100 - (avg by (instance)(irate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 85
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage"
+          desc: "CPU consistently above 85%"
