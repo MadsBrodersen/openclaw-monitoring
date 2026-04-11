@@ -5,4 +5,8 @@ policies:
     receiver: 'email'
     group_by:
       - alertname
-    continue: false
+    mute_timings: []
+    routes:
+      - receiver: 'email'
+        object_matchers:
+          - ['severity', '=', 'critical']
