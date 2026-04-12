@@ -1,0 +1,195 @@
+{
+  "id": null,
+  "uid": "openclaw-observability",
+  "title": "OpenClaw Observability Dashboard",
+  "tags": ["openclaw", "monitoring"],
+  "timezone": "",
+  "schemaVersion": 36,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+
+    {
+      "type": "stat",
+      "title": "Gateway Health",
+      "id": 1,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "probe_success{job=\"openclaw-gateway\"}",
+          "instant": true
+        }
+      ],
+      "colorMode": "value",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "red", "value": 0},
+              {"color": "green", "value": 1}
+            ]
+          }
+        }
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        }
+      },
+      "gridPos": {"x": 0, "y": 0, "w": 4, "h": 4}
+    },
+
+    {
+      "type": "stat",
+      "title": "Control-UI Health",
+      "id": 2,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "probe_success{job=\"openclaw-control-ui\"}",
+          "instant": true
+        }
+      ],
+      "colorMode": "value",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "red", "value": 0},
+              {"color": "green", "value": 1}
+            ]
+          }
+        }
+      },
+      "options": {
+        "reduceOptions": {"calcs": ["lastNotNull"]}
+      },
+      "gridPos": {"x": 4, "y": 0, "w": 4, "h": 4}
+    },
+
+
+    {
+      "type": "graph",
+      "title": "Gateway Response Time (ms)",
+      "id": 3,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "probe_duration_seconds{job=\"openclaw-gateway\"} * 1000"
+        }
+      ],
+      "gridPos": {"x": 0, "y": 4, "w": 12, "h": 6}
+    },
+
+    {
+      "type": "graph",
+      "title": "Control-UI Response Time (ms)",
+      "id": 4,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "probe_duration_seconds{job=\"openclaw-control-ui\"} * 1000"
+        }
+      ],
+      "gridPos": {"x": 0, "y": 10, "w": 12, "h": 6}
+    },
+
+
+    {
+      "type": "stat",
+      "title": "Current Gateway Status",
+      "id": 5,
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "max_over_time(probe_success{job=\"openclaw-gateway\"}[5m])" }
+      ],
+      "gridPos": {"x": 8, "y": 0, "w": 4, "h": 4}
+    },
+
+
+    {
+      "type": "graph",
+      "title": "CPU Usage (Host)",
+      "id": 6,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "100 - (avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[2m])) * 100)"
+        }
+      ],
+      "gridPos": {"x": 0, "y": 16, "w": 12, "h": 6}
+    },
+
+
+    {
+      "type": "graph",
+      "title": "Memory Usage (Host)",
+      "id": 7,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100"
+        }
+      ],
+      "gridPos": {"x": 0, "y": 22, "w": 12, "h": 6}
+    },
+
+
+    {
+      "type": "graph",
+      "title": "Disk Usage (Root FS)",
+      "id": 8,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "(node_filesystem_size_bytes{mountpoint=\"/\"} - node_filesystem_free_bytes{mountpoint=\"/\"}) / node_filesystem_size_bytes{mountpoint=\"/\"} * 100"
+        }
+      ],
+      "gridPos": {"x": 0, "y": 28, "w": 12, "h": 6}
+    },
+
+
+    {
+      "type": "graph",
+      "title": "Container CPU (OpenClaw)",
+      "id": 9,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{container=\"openclaw\"}[2m]) * 100"
+        }
+      ],
+      "gridPos": {"x": 0, "y": 34, "w": 12, "h": 6}
+    },
+
+
+    {
+      "type": "graph",
+      "title": "Container Memory (OpenClaw)",
+      "id": 10,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "container_memory_usage_bytes{container=\"openclaw\"}"
+        }
+      ],
+      "gridPos": {"x": 0, "y": 40, "w": 12, "h": 6}
+    },
+
+
+    {
+      "type": "alertlist",
+      "title": "Active Alerts",
+      "id": 11,
+      "datasource": "Prometheus",
+      "gridPos": {"x": 0, "y": 46, "w": 12, "h": 6}
+    }
+  ],
+
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  }
+}
