@@ -1,0 +1,43 @@
+groups:
+- name: openclaw-alerts
+  rules:
+
+  # 🔥 Gateway DOWN
+  - alert: OpenClawGatewayDown
+    expr: probe_success{job="openclaw-gateway"} == 0
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: "OpenClaw Gateway is DOWN"
+      description: "Gateway endpoint 18789 is unreachable via Blackbox probe."
+
+  # 🔥 Control UI DOWN
+  - alert: OpenClawControlUiDown
+    expr: probe_success{job="openclaw-control-ui"} == 0
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "OpenClaw Control UI is DOWN"
+      description: "Control UI endpoint 18791 is not responding (HTTP probe failed)."
+
+  # 🔥 OpenClaw container unhealthy
+  - alert: OpenClawContainerUnhealthy
+    expr: container_last_seen{name="openclaw"} < (time() - 20)
+    for: 10s
+    labels:
+      severity: critical
+    annotations:
+      summary: "OpenClaw Docker container unhealthy"
+      description: "The container has not reported metrics recently — check logs."
+
+  # ⚠️ High latency on Gateway
+  - alert: OpenClawHighLatency
+    expr: probe_duration_seconds{job="openclaw-gateway"} > 0.5
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "OpenClaw Gateway latency too high"
+      description: "Gateway responses exceed 500 ms for more than 2 minutes."
