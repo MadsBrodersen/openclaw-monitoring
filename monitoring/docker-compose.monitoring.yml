@@ -74,7 +74,7 @@ services:
     container_name: openclaw-blackbox
     restart: unless-stopped
     networks:
-      - docker_backend
+      - monitoring
     ports:
       - "9115:9115"
     command: ["--config.file=/config/blackbox.yml"]
