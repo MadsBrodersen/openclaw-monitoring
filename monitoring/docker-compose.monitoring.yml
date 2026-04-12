@@ -66,6 +66,18 @@ services:
     volumes:
       - ./loki/loki.yml:/etc/loki/loki.yml
 
+  blackbox:
+    image: prom/blackbox-exporter:latest
+    container_name: openclaw-blackbox
+    restart: unless-stopped
+    networks:
+      - docker_backend
+    ports:
+      - "9115:9115"
+    command: ["--config.file=/config/blackbox.yml"]
+    volumes:
+      - ./monitoring/blackbox.yml:/config/blackbox.yml
+
   promtail:
     image: grafana/promtail:2.9.0
     restart: unless-stopped

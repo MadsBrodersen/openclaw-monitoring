@@ -2,13 +2,17 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
+
+  # ✅ Blackbox probe for OpenClaw Gateway
   - job_name: "openclaw-gateway"
     metrics_path: /probe
     params:
       module: [http_2xx]
       target: ["http://docker1.fasanvejen.local:18789/health"]
     static_configs:
-        - targets: ["blackbox:9115"]
+      - targets: ["blackbox:9115"]
+
+  # ✅ Blackbox probe for OpenClaw Control-UI
   - job_name: "openclaw-control-ui"
     metrics_path: /probe
     params:
@@ -16,6 +20,18 @@ scrape_configs:
       target: ["http://docker1.fasanvejen.local:18791/"]
     static_configs:
       - targets: ["blackbox:9115"]
+
+  # ✅ Blackbox exporter health itself
   - job_name: "blackbox"
-  static_configs:
-    - targets: ["blackbox:9115"]
+    static_configs:
+      - targets: ["blackbox:9115"]
+
+  # ✅ Node exporter (fra dit screenshot er den UP)
+  - job_name: "nodeexporter"
+    static_configs:
+      - targets: ["nodeexporter:9100"]
+
+  # ✅ Cadvisor (fra dit screenshot er den UP)
+  - job_name: "cadvisor"
+    static_configs:
+      - targets: ["cadvisor:8080"]
