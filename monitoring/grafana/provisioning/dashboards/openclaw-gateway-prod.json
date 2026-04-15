@@ -2,37 +2,40 @@
   "title": "OpenClaw – Gateway (Production)",
   "uid": "openclaw-gateway-prod",
   "schemaVersion": 39,
-  "version": 5,
-  "tags": ["openclaw", "gateway", "production", "logs"],
+  "version": 6,
+  "tags": ["openclaw", "gateway", "teams", "production"],
   "time": {
     "from": "now-1h",
     "to": "now"
   },
   "panels": [
+
     {
       "id": 1,
-      "title": "Gateway lifecycle",
+      "title": "Gateway lifecycle (text logs)",
       "type": "logs",
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |= \"subsystem\\\":\\\"gateway\\\"\""
+          "expr": "{container=\"openclaw-gateway\"} |= \"[gateway]\""
         }
       ],
-      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 7 }
     },
+
     {
       "id": 2,
-      "title": "Warnings & Errors",
+      "title": "Gateway lifecycle (structured JSON)",
       "type": "logs",
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=~\".*openclaw.*\"} | json |~ \"\\\"logLevelName\\\":\\\"(WARN|ERROR)\\\"\""
+          "expr": "{container=\"openclaw-gateway\"} | json |= \"\\\"subsystem\\\":\\\"gateway\\\"\""
         }
       ],
-      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 7 }
     },
+
     {
       "id": 3,
       "title": "Microsoft Teams channel activity",
@@ -40,11 +43,12 @@
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |= \"\\\"name\\\":\\\"msteams\\\"\""
+          "expr": "{container=\"openclaw-gateway\"} | json |= \"\\\"name\\\":\\\"msteams\\\"\""
         }
       ],
-      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 }
+      "gridPos": { "x": 0, "y": 7, "w": 12, "h": 7 }
     },
+
     {
       "id": 4,
       "title": "Teams message volume (last 5 min)",
@@ -52,34 +56,49 @@
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "count_over_time(({container=~\".*openclaw.*\"} | json |= \"\\\"name\\\":\\\"msteams\\\"\")[5m])"
+          "expr": "count_over_time(({container=\"openclaw-gateway\"} | json |= \"\\\"name\\\":\\\"msteams\\\"\")[5m])"
         }
       ],
-      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 }
+      "gridPos": { "x": 12, "y": 7, "w": 12, "h": 7 }
     },
+
     {
       "id": 5,
-      "title": "Internal subsystems (plugins / cron / health)",
+      "title": "Warnings & Errors (all components)",
       "type": "logs",
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}} {{.2}}\" |~ \"subsystem\\\":\\\"(plugins|health|cron)\"\""
+          "expr": "{container=~\"openclaw-(gateway|agent|blackbox)\"} |~ \"WARN|ERROR|error:\""
         }
       ],
-      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 }
+      "gridPos": { "x": 0, "y": 14, "w": 12, "h": 7 }
     },
+
     {
       "id": 6,
-      "title": "Raw OpenClaw runtime logs (debug / drill-down)",
+      "title": "Internal subsystems (plugins / cron / bonjour)",
       "type": "logs",
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=~\".*openclaw.*\"}"
+          "expr": "{container=\"openclaw-gateway\"} | json |~ \"subsystem\\\":\\\"(plugins|cron|bonjour|heartbeat|health-monitor)\"\""
         }
       ],
-      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 10 }
+      "gridPos": { "x": 12, "y": 14, "w": 12, "h": 7 }
+    },
+
+    {
+      "id": 7,
+      "title": "Raw OpenClaw logs (debug / ground truth)",
+      "type": "logs",
+      "datasource": { "type": "loki", "uid": "Loki" },
+      "targets": [
+        {
+          "expr": "{container=~\"openclaw-.*\"}"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 21, "w": 24, "h": 10 }
     }
   ]
 }
