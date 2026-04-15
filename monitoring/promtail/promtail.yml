@@ -9,38 +9,23 @@ clients:
   - url: http://loki:3100/loki/api/v1/push
 
 scrape_configs:
-  - job_name: docker  
+  - job_name: docker
     docker_sd_configs:
       - host: unix:///var/run/docker.sock
+
     relabel_configs:
       - source_labels: [__meta_docker_container_name]
         regex: '/(.*)'
         target_label: container
+
       - source_labels: [__meta_docker_container_image]
         target_label: image
+
       - source_labels: [__meta_docker_container_id]
         target_label: container_id
+
       - target_label: job
         replacement: docker
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: docker
-          __path__: /var/lib/docker/containers/*/*.log
 
-  - job_name: nginx
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: nginx
-          __path__: /var/log/nginx/*.log
-
-  - job_name: openclaw
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: openclaw
-          __path__: /home/node/.openclaw/logs/*.log
+      - source_labels: [__meta_docker_container_log_path]
+        target_label: __path__
