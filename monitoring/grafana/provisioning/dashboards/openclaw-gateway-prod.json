@@ -51,12 +51,12 @@
 
     {
       "id": 4,
-      "title": "Teams message volume (last 5 min)",
+      "title": "Teams message volume",
       "type": "timeseries",
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "count_over_time(({container=\"openclaw-gateway\"} | json |= \"\\\"name\\\":\\\"msteams\\\"\")[5m])"
+          "expr": "count_over_time(({container=\"openclaw-gateway\"} | json |= \"\\\"name\\\":\\\"msteams\\\"\")[$__interval])"
         }
       ],
       "gridPos": { "x": 12, "y": 7, "w": 12, "h": 7 }
