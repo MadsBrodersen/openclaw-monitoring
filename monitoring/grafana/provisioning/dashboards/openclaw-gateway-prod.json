@@ -16,7 +16,7 @@
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "count_over_time({container=\"openclaw-gateway\"}[1m])"
+          "expr": "count_over_time({container=~\".*openclaw.*\"}[1m])"
         }
       ],
       "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
@@ -28,7 +28,7 @@
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=\"openclaw-gateway\"} |~ \"(error|exception|panic)\""
+          "expr": "{container=~\".*openclaw.*\"} |~ \"(error|exception|panic)\""
         }
       ],
       "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
@@ -76,7 +76,7 @@
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=\"openclaw-gateway\"}"
+          "expr": "{container=~\".*openclaw.*\"}"
         }
       ],
       "gridPos": { "x": 12, "y": 16, "w": 12, "h": 10 }
