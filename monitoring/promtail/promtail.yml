@@ -18,35 +18,8 @@ scrape_configs:
 
       # Teams channel (msteams)
       - regex:
-          expression: '\"name\":\"(?P<channel>[^\"]+)\"'
+          expression: '"name":"(?P<channel>[^"]+)"'
 
-      # OpenClaw subsystem (gateway, plugins, health-monitor, ...)
+      # OpenClaw subsystem (gateway, plugins, etc.)
       - regex:
-          expression: '\"subsystem\":\"(?P<subsystem>[^\"]+)\"'
-
-      # OpenClaw module (cron, etc.)
-      - regex:
-          expression: '\"module\":\"(?P<module>[^\"]+)\"'
-
-      # Promote extracted fields to labels (if present)
-      - labels:
-          channel:
-          subsystem:
-          module
-
-    relabel_configs:
-      - source_labels: [__meta_docker_container_name]
-        regex: '/(.*)'
-        target_label: container
-
-      - source_labels: [__meta_docker_container_image]
-        target_label: image
-
-      - source_labels: [__meta_docker_container_id]
-        target_label: container_id
-
-      - target_label: job
-        replacement: docker
-
-      - source_labels: [__meta_docker_container_log_path]
-        target_label: __path__
+          expression: '"subsystem":"(?P<subsystem>[^"]+)"'
