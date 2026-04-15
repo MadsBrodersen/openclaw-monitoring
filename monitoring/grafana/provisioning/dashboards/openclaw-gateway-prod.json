@@ -80,6 +80,30 @@
         }
       ],
       "gridPos": { "x": 12, "y": 16, "w": 12, "h": 10 }
+    },    
+    {
+      "id": 7,
+      "title": "Teams → OpenClaw message volume",
+      "type": "timeseries",
+      "datasource": { "type": "loki", "uid": "Loki" },
+      "targets": [
+        {
+          "expr": "count_over_time({container=~\".*openclaw.*\"} |= \"api/messages\"[5m])"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 26, "w": 12, "h": 8 }
+    },
+    {
+      "id": 8,
+      "title": "Teams → OpenClaw raw logs",
+      "type": "logs",
+      "datasource": { "type": "loki", "uid": "Loki" },
+      "targets": [
+        {
+          "expr": "{container=~\".*openclaw.*\"} |= \"api/messages\""
+        }
+      ],
+      "gridPos": { "x": 12, "y": 26, "w": 12, "h": 8 }
     }
   ]
 }
