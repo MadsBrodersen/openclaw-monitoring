@@ -16,12 +16,13 @@ scrape_configs:
     pipeline_stages:
       - docker: {}
 
-      # === TEST: extract Teams channel ===
+      # Extract Teams channel (msteams)
       - regex:
           expression: 'name":"(?P<channel>msteams)'
 
+      # Promote extracted value to label
       - labels:
-          channel
+          channel:
 
     relabel_configs:
       - source_labels: [__meta_docker_container_name]
