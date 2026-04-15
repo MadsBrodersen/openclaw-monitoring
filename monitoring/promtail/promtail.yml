@@ -16,10 +16,10 @@ scrape_configs:
     pipeline_stages:
       - docker: {}
 
-      # ✅ FORCE full-line match so capture is applied
+      # ✅ MATCH UNESCAPED LOG CONTENT (after docker stage)
       - regex:
           source: log
-          expression: '.*(?P<channel>msteams).*'
+          expression: '"name":"(?P<channel>msteams)"'
 
       - labels:
           channel:
