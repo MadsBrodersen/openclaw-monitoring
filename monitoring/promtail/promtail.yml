@@ -16,19 +16,21 @@ scrape_configs:
     pipeline_stages:
       - docker: {}
 
-      # Teams channel (msteams)
-      - regex:
-          expression: '"name":"(?P<channel>[^"]+)"'
+      # ---- OpenClaw labels (ROBUST) ----
 
-      # OpenClaw subsystem (gateway, plugins, etc.)
+      # Channel (Teams etc.)
       - regex:
-          expression: '"subsystem":"(?P<subsystem>[^"]+)"'
+          expression: "\"name\":\"(?P<channel>[^\"]+)\""
 
-      # OpenClaw module (cron, etc.)
+      # Subsystem (gateway, plugins, health-monitor)
       - regex:
-          expression: '"module":"(?P<module>[^"]+)"'
+          expression: "\"subsystem\":\"(?P<subsystem>[^\"]+)\""
 
-      # Promote extracted values to labels
+      # Module (cron etc.)
+      - regex:
+          expression: "\"module\":\"(?P<module>[^\"]+)\""
+
+      # Promote to labels
       - labels:
           channel:
           subsystem:
