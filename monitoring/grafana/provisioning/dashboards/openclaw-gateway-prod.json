@@ -2,9 +2,12 @@
   "title": "OpenClaw – Gateway (Production)",
   "uid": "openclaw-gateway-prod",
   "schemaVersion": 39,
-  "version": 3,
+  "version": 5,
   "tags": ["openclaw", "gateway", "production", "logs"],
-  "time": { "from": "now-1h", "to": "now" },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
   "panels": [
     {
       "id": 1,
@@ -13,7 +16,7 @@
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |= \"gateway\""
+          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |= \"subsystem\\\":\\\"gateway\\\"\""
         }
       ],
       "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
@@ -25,7 +28,7 @@
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |~ \"(WARN|ERROR)\""
+          "expr": "{container=~\".*openclaw.*\"} | json |~ \"\\\"logLevelName\\\":\\\"(WARN|ERROR)\\\"\""
         }
       ],
       "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
@@ -37,7 +40,7 @@
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |= \"msteams\""
+          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |= \"\\\"name\\\":\\\"msteams\\\"\""
         }
       ],
       "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 }
@@ -49,18 +52,34 @@
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "count_over_time(({container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |= \"msteams\")[5m])"
+          "expr": "count_over_time(({container=~\".*openclaw.*\"} | json |= \"\\\"name\\\":\\\"msteams\\\"\")[5m])"
         }
       ],
       "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 }
     },
     {
       "id": 5,
-      "title": "Raw OpenClaw runtime logs",
+      "title": "Internal subsystems (plugins / cron / health)",
       "type": "logs",
       "datasource": { "type": "loki", "uid": "Loki" },
-      "targets": [{ "expr": "{container=~\".*openclaw.*\"}" }],
-      "gridPos": { "x": 0, "y": 16, "w": 24, "h": 10 }
+      "targets": [
+        {
+          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}} {{.2}}\" |~ \"subsystem\\\":\\\"(plugins|health|cron)\"\""
+        }
+      ],
+      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 }
+    },
+    {
+      "id": 6,
+      "title": "Raw OpenClaw runtime logs (debug / drill-down)",
+      "type": "logs",
+      "datasource": { "type": "loki", "uid": "Loki" },
+      "targets": [
+        {
+          "expr": "{container=~\".*openclaw.*\"}"
+        }
+      ],
+      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 10 }
     }
   ]
 }
