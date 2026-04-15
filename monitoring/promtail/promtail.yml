@@ -16,10 +16,10 @@ scrape_configs:
     pipeline_stages:
       - docker: {}
 
-      # Match mod docker-unwrapped log field
+      # ✅ Match escaped JSON-in-JSON for Teams logs
       - regex:
           source: log
-          expression: 'name":"(?P<channel>msteams)'
+          expression: '\\\"name\\\":\\\"(?P<channel>msteams)\\\"'
 
       - labels:
           channel:
