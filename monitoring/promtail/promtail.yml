@@ -14,8 +14,27 @@ scrape_configs:
       - host: unix:///var/run/docker.sock
 
     pipeline_stages:
+      # Docker JSON parsing
       - docker: {}
 
+      # Første parsing: top-level JSON
+      - json:
+          expressions:
+            meta0: "0"
+
+      # Anden parsing: JSON-tekst inde i felt "0"
+      - json:
+          source: meta0
+          expressions:
+            channel: name
+            subsystem: subsystem
+            module: module
+
+      # Promovér felterne til labels (kun når de findes)
+      - labels:
+          channel:
+          subsystem:
+          module
 
     relabel_configs:
       - source_labels: [__meta_docker_container_name]
