@@ -12,15 +12,6 @@ scrape_configs:
     static_configs:
       - targets: ["blackbox:9115"]
 
-  # ✅ Blackbox probe for OpenClaw Control-UI
-  - job_name: "openclaw-control-ui"
-    metrics_path: /probe
-    params:
-      module: [http_2xx]
-      target: ["http://docker1.fasanvejen.local:18791/"]
-    static_configs:
-      - targets: ["blackbox:9115"]
-
   # ✅ Blackbox exporter health itself
   - job_name: "blackbox"
     static_configs:
