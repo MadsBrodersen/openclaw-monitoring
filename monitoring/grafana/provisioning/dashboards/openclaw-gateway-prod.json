@@ -2,35 +2,30 @@
   "title": "OpenClaw – Gateway (Production)",
   "uid": "openclaw-gateway-prod",
   "schemaVersion": 39,
-  "version": 2,
+  "version": 3,
   "tags": ["openclaw", "gateway", "production", "logs"],
-  "time": {
-    "from": "now-1h",
-    "to": "now"
-  },
+  "time": { "from": "now-1h", "to": "now" },
   "panels": [
     {
       "id": 1,
-      "title": "Gateway lifecycle (startup / health)",
+      "title": "Gateway lifecycle",
       "type": "logs",
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=~\".*openclaw.*\"} |~ \"\\\"subsystem\\\":\\\"gateway\\\"\"",
-          "refId": "A"
+          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |= \"gateway\""
         }
       ],
       "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
     },
     {
       "id": 2,
-      "title": "Gateway warnings & errors",
+      "title": "Warnings & Errors",
       "type": "logs",
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=~\".*openclaw.*\"} |~ \"\\\"logLevelName\\\":\\\"(WARN|ERROR)\\\"\"",
-          "refId": "A"
+          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |~ \"(WARN|ERROR)\""
         }
       ],
       "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
@@ -42,8 +37,7 @@
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "{container=~\".*openclaw.*\"} |~ \"\\\"subsystem\\\":\\\"msteams\\\"\"",
-          "refId": "A"
+          "expr": "{container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |= \"msteams\""
         }
       ],
       "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 }
@@ -55,50 +49,18 @@
       "datasource": { "type": "loki", "uid": "Loki" },
       "targets": [
         {
-          "expr": "count_over_time({container=~\".*openclaw.*\"} |~ \"\\\"subsystem\\\":\\\"msteams\\\"\"[5m])",
-          "refId": "A"
+          "expr": "count_over_time(({container=~\".*openclaw.*\"} | json | line_format \"{{.0}} {{.1}}\" |= \"msteams\")[5m])"
         }
       ],
       "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 }
     },
     {
       "id": 5,
-      "title": "HTTP API usage (/v1/responses via NGINX)",
-      "type": "timeseries",
-      "datasource": { "type": "loki", "uid": "Loki" },
-      "targets": [
-        {
-          "expr": "count_over_time({container=\"nginx\"} |= \"/v1/responses\"[1m])",
-          "refId": "A"
-        }
-      ],
-      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 }
-    },
-    {
-      "id": 6,
-      "title": "NGINX 4xx & 5xx for OpenClaw API",
+      "title": "Raw OpenClaw runtime logs",
       "type": "logs",
       "datasource": { "type": "loki", "uid": "Loki" },
-      "targets": [
-        {
-          "expr": "{container=\"nginx\"} |= \"/v1/responses\" |~ \" 4[0-9]{2} | 5[0-9]{2} \"",
-          "refId": "A"
-        }
-      ],
-      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 }
-    },
-    {
-      "id": 7,
-      "title": "Raw OpenClaw runtime logs (debug / drill-down)",
-      "type": "logs",
-      "datasource": { "type": "loki", "uid": "Loki" },
-      "targets": [
-        {
-          "expr": "{container=~\".*openclaw.*\"}",
-          "refId": "A"
-        }
-      ],
-      "gridPos": { "x": 0, "y": 24, "w": 24, "h": 10 }
+      "targets": [{ "expr": "{container=~\".*openclaw.*\"}" }],
+      "gridPos": { "x": 0, "y": 16, "w": 24, "h": 10 }
     }
   ]
 }
