@@ -52,11 +52,11 @@ docs/
 ### 📚 Dokumentation
 Start her, hvis du er ny i setup’et:
 * 🔍 Arkitektur & observability‑design
-  → docs/observability.md
+  → [docs/observability.md](https://github.com/MadsBrodersen/openclaw-monitoring/blob/main/docs/observability.md)
 * 🛠️ Drift & fejlsøgning (runbook)
-  → docs/runbook.md
+  → [docs/runbook.md](https://github.com/MadsBrodersen/openclaw-monitoring/blob/main/docs/runbook.md)
 * 📈 Grafana dashboards & LogQL‑queries
-  → docs/dashboards.md
+  → [docs/dashboards.md](https://github.com/MadsBrodersen/openclaw-monitoring/blob/main/docs/dashboards.md)
 
 ### 🧠 Designprincipper
 * ✅ Logs parses i Promtail, ikke i dashboards
