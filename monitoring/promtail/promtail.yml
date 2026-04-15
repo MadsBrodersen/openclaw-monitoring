@@ -16,10 +16,10 @@ scrape_configs:
     pipeline_stages:
       - docker: {}
 
-      # ✅ MATCH UNESCAPED LOG CONTENT (after docker stage)
+      # ✅ Match JSON-in-JSON, exactly as seen in dry-run output
       - regex:
           source: log
-          expression: '"name":"(?P<channel>msteams)"'
+          expression: '\\\\\"name\\\\\":\\\\\"(?P<channel>msteams)\\\\\"'
 
       - labels:
           channel:
