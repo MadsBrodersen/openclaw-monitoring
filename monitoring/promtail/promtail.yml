@@ -16,11 +16,11 @@ scrape_configs:
     pipeline_stages:
       - docker: {}
 
-      # Extract Teams channel (msteams)
+      # Match mod docker-unwrapped log field
       - regex:
+          source: log
           expression: 'name":"(?P<channel>msteams)'
 
-      # Promote extracted value to label
       - labels:
           channel:
 
