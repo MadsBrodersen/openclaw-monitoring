@@ -14,20 +14,53 @@ scrape_configs:
       - host: unix:///var/run/docker.sock
 
     pipeline_stages:
+      # ----------------------------------------------------
+      # 1) Unwrap Docker JSON logs
+      # ----------------------------------------------------
       - docker: {}
 
-      # ✅ Match JSON-in-JSON, exactly as seen in dry-run output
-      - regex:
-          source: log
-          expression: '\\\\\"name\\\\\":\\\\\"(?P<channel>msteams)\\\\\"'
+      # ----------------------------------------------------
+      # 2) Parse outer JSON (OpenClaw structure)
+      #    Example:
+      #    {
+      #      "0": "{\"name\":\"msteams\"}",
+      #      "1": "dispatch complete",
+      #      "_meta": {...}
+      #    }
+      # ----------------------------------------------------
+      - json:
+          expressions:
+            inner: '"0"'
 
+      # ----------------------------------------------------
+      # 3) Parse JSON string inside field "0"
+      #    This handles:
+      #      - {"name":"msteams"}
+      #      - {"subsystem":"gateway"}
+      #      - {"module":"cron"}
+      # ----------------------------------------------------
+      - json:
+          source: inner
+          expressions:
+            channel: name
+            subsystem: subsystem
+            module: module
+
+      # ----------------------------------------------------
+      # 4) Promote extracted fields to labels
+      #    (labels are only set if values exist)
+      # ----------------------------------------------------
       - labels:
           channel:
+          subsystem:
+          module:
 
     relabel_configs:
+      # Container name (clean)
       - source_labels: [__meta_docker_container_name]
         regex: '/(.*)'
         target_label: container
 
+      # Static job label
       - target_label: job
         replacement: docker
