@@ -16,10 +16,10 @@ scrape_configs:
     pipeline_stages:
       - docker: {}
 
-      # ✅ Robust extraction: match the literal token "msteams"
+      # ✅ FORCE full-line match so capture is applied
       - regex:
           source: log
-          expression: '(?P<channel>msteams)'
+          expression: '.*(?P<channel>msteams).*'
 
       - labels:
           channel:
