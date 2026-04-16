@@ -104,3 +104,32 @@ Hvis problemer ikke kan forklares via denne runbook:
 2. Tjek Loki ingestion
 3. Tjek OpenClaw gateway container logs
 4. Eskalér til dybere debugging
+## OpenClaw – Admin-adgang
+### Admin-URL
+OpenClaw stiller et browserbaseret administrativt interface (Canvas) til rådighed på:
+```url
+https://openclaw.brodersen.cloud/admin/
+```
+Dette er **det eneste understøttede administrative entrypoint**.
+---
+### Autentificering
+- Admin-interfacet er beskyttet med **HTTP Basic Auth**
+- Autentificering håndteres udelukkende af **Nginx**
+- Brugere defineres i filen:
+```bash
+/srv/docker/data/nginx/.openclaw.htpasswd
+```
+- Filen mountes read-only ind i Nginx-containeren
+
+---
+
+### Sikkerhedsmodel
+
+- OpenClaw eksponerer ikke admin-interfacet direkte
+- Nginx fungerer som eneste sikkerheds- og auth-boundary
+- Interne OpenClaw-stier såsom `/__openclaw__/` og `/control/` er bevidst blokeret
+---
+### Noter
+- Browsere kan cache HTTP Basic Auth-credentials
+- Ved uventet adfærd kan et privat browser-vindue anvendes
+- Admin-adgang bør kun gives til betroede brugere
