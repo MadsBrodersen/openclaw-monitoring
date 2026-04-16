@@ -70,3 +70,12 @@ Dette reducerer kompleksitet og øger stabilitet i drift.
 * Observability‑setup er production‑ready
 * Promtail pipeline er verificeret via dry‑run
 * Dashboard v7 er canonical reference
+## Admin-interface
+
+OpenClaw stiller et administrativt web-interface til rådighed via reverse proxyen:
+
+- **URL:** `https://openclaw.brodersen.cloud/admin/`
+- **Adgang:** HTTP Basic Auth (håndteres af Nginx)
+
+Al administrativ adgang skal ske via dette endpoint.  
+Interne OpenClaw-stier er ikke direkte eksponeret.
