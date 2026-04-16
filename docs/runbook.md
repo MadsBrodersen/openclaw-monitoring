@@ -128,6 +128,7 @@ Dette er **det eneste understøttede administrative entrypoint**.
 - OpenClaw eksponerer ikke admin-interfacet direkte
 - Nginx fungerer som eneste sikkerheds- og auth-boundary
 - Interne OpenClaw-stier såsom `/__openclaw__/` og `/control/` er bevidst blokeret
+  
 “Uautoriseret adgang til /admin/ omdirigeres til en login‑side, som anvender HTTP Basic Auth via Nginx.”
 ---
 ### Noter
