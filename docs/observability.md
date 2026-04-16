@@ -7,6 +7,11 @@ The goals are:
 - Clean separation between gateway, agent, and internal noise
 - Stable log querying without LogQL hacks or dashboard-side parsing
 
+### Admin-interface
+
+OpenClaw leverer et browserbaseret admin-interface (Canvas), som eksponeres eksternt via Nginx på `/admin/`.
+
+Interfacet er sikret med HTTP Basic Auth på reverse-proxy-niveau og eksponeres ikke direkte af gateway-servicen.
 
 ## Architecture
 
