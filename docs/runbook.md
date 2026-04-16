@@ -130,6 +130,7 @@ Dette er **det eneste understøttede administrative entrypoint**.
 - Interne OpenClaw-stier såsom `/__openclaw__/` og `/control/` er bevidst blokeret
   
 “Uautoriseret adgang til /admin/ omdirigeres til en login‑side, som anvender HTTP Basic Auth via Nginx.”
+
 ---
 ### Noter
 - Browsere kan cache HTTP Basic Auth-credentials
